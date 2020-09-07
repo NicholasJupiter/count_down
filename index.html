@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      border: 0;
+      outline: 0;
+    }
+
+    .interval {
+      background-image: url(./Timer.png);
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      width: 261px;
+      height: 93px;
+      position: relative;
+      display: flex;
+    }
+
+    .interval>p {
+      font-family: number;
+      font-size: 50px;
+      transform: translateY(-10px);
+      user-select: none;
+      display: flex;
+    }
+
+    .interval>.black-text {
+      margin: auto;
+    }
+
+    .interval>.black-text>i {
+      font-style: normal;
+      color: rgba(255, 255, 255, .1);
+      text-shadow: 0 0 5px #031327;
+    }
+
+    .interval>.black-text>i.active {
+      color: white;
+      text-shadow: 0 0 5px #0078bc;
+    }
+
+    .interval>.black-text>span {
+      position: relative;
+      color: rgba(255, 255, 255, .1);
+      text-shadow: 0 0 5px #031327;
+    }
+
+    .interval>.black-text>span>span {
+      position: absolute;
+      color: white;
+    }
+
+    .interval>.black-text>span::after {
+      content: attr(data-number);
+      color: white;
+      position: absolute;
+      right: 0;
+      text-shadow: 0 0 5px #0078bc;
+    }
+
+    @font-face {
+      font-family: number;
+      src: url(./number-font.ttf);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="interval">
+    <p class="black-text" data-string="123">
+      <span>0</span>
+      <span>0</span>
+      <i class="hourse">:</i>
+      <span>0</span>
+      <span>0</span>
+      <i class="minutes">:</i>
+      <span>0</span>
+      <span>0</span>
+    </p>
+  </div>
+</body>
+
+
+<script>
+  const time = 5; // 倒计时时间
+  const toDate = new Date();
+  toDate.setMinutes(toDate.getMinutes() + 5);
+
+
+
+  const inter = setInterval(() => {
+    const res = getTimeArray(toDate);
+    if (!res) return clearInterval(inter);
+    document.querySelectorAll('.black-text>span').forEach((item, i) => {
+      item.setAttribute('data-number', res[i]);
+    })
+  }, 1000);
+
+  
+  const timeout = setTimeout(() => {
+    document.querySelector('.minutes').className += ' active';
+    clearInterval(timeout);
+  }, 1000);
+
+  //
+  function getNumbers(str) {
+    const temp = String(str);
+    if (str >= 10) return temp.split('');
+    if (str === 0) return [0, 0];
+    return [0, temp];
+  }
+
+  function getTimeArray(times) {
+    const currDate = new Date();
+    const resTime = (times.getTime() - currDate.getTime()) / 1000;
+    if (resTime <= 0) return null;
+    const days = Math.floor(resTime / 60 / 60 / 24);
+    const hourse = getNumbers(Math.floor(resTime / 60 / 60) % 24);
+    const minutes = getNumbers(Math.floor(resTime / 60) % 60);
+    const seconds = getNumbers(Math.floor(resTime % 60));
+    return ['', '', minutes, seconds].flat();
+  }
+</script>
+
+</html>
